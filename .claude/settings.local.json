@@ -5,10 +5,10 @@
       "Bash(npm run build:*)",
       "WebFetch(domain:www.naturalearthdata.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:github.com)",
       "Bash(curl:*)",
       "Bash(powershell -Command:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(npm install:*)"
     ]
   }
 }

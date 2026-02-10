@@ -11,19 +11,25 @@ import { TOGGLE_CLASSES } from "./components/GeographyRegions/constants";
 function App() {
   const [enabledClasses, setEnabledClasses] = useState<
     Record<string, boolean>
-  >(() => Object.fromEntries(TOGGLE_CLASSES.map((k) => [k, true])));
+  >(() => Object.fromEntries(TOGGLE_CLASSES.map((k) => [k, false])));
 
   const handleToggle = (cls: string) =>
     setEnabledClasses((prev) => ({ ...prev, [cls]: !prev[cls] }));
 
+  const handleToggleAll = (on: boolean) =>
+    setEnabledClasses(Object.fromEntries(TOGGLE_CLASSES.map((k) => [k, on])));
+
+  const [showRivers, setShowRivers] = useState(false);
+  const handleToggleRivers = () => setShowRivers((v) => !v);
+
   return (
     <Globe>
-      <Rivers />
-      <RiverLabels />
+      <Rivers visible={showRivers} />
+      <RiverLabels visible={showRivers} />
       <GeographyRegions enabledClasses={enabledClasses} />
       <GeographyRegionLabels enabledClasses={enabledClasses} />
       <CoordinateDisplay />
-      <Sidebar enabledClasses={enabledClasses} onToggle={handleToggle} />
+      <Sidebar enabledClasses={enabledClasses} onToggle={handleToggle} onToggleAll={handleToggleAll} showRivers={showRivers} onToggleRivers={handleToggleRivers} />
     </Globe>
   );
 }

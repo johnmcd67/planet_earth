@@ -2,14 +2,18 @@ import { useState } from "react";
 import BookmarkList from "./BookmarkList";
 import MeasurementTool from "./MeasurementTool";
 import LayerToggles from "./LayerToggles";
+import Search from "./Search";
 import "./Sidebar.css";
 
 interface Props {
   enabledClasses: Record<string, boolean>;
   onToggle: (cls: string) => void;
+  onToggleAll: (on: boolean) => void;
+  showRivers: boolean;
+  onToggleRivers: () => void;
 }
 
-export default function Sidebar({ enabledClasses, onToggle }: Props) {
+export default function Sidebar({ enabledClasses, onToggle, onToggleAll, showRivers, onToggleRivers }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,7 +26,8 @@ export default function Sidebar({ enabledClasses, onToggle }: Props) {
         {open ? "\u2190" : "\u2630"}
       </button>
       <div className={`sidebar ${open ? "open" : ""}`}>
-        <LayerToggles enabledClasses={enabledClasses} onToggle={onToggle} />
+        <Search />
+        <LayerToggles enabledClasses={enabledClasses} onToggle={onToggle} onToggleAll={onToggleAll} showRivers={showRivers} onToggleRivers={onToggleRivers} />
         <BookmarkList />
         <MeasurementTool />
       </div>

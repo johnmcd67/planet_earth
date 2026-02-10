@@ -72,13 +72,12 @@ export default function GeographyRegionLabels({ enabledClasses }: Props) {
             label: {
               text: name,
               font: "bold 20px sans-serif",
-              fillColor: labelColor.withAlpha(0.9),
+              fillColor: Color.WHITE.withAlpha(0.9),
               outlineColor: Color.BLACK,
               outlineWidth: 2,
               style: LabelStyle.FILL_AND_OUTLINE,
               heightReference: HeightReference.CLAMP_TO_GROUND,
               verticalOrigin: VerticalOrigin.BOTTOM,
-              disableDepthTestDistance: Number.POSITIVE_INFINITY,
               scaleByDistance: new NearFarScalar(1e5, 1.0, 8e6, 0.3),
             },
           });

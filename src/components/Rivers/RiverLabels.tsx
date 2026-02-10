@@ -39,10 +39,16 @@ function getMidpoint(feature: GeoJsonFeature): [number, number] | null {
   return [mid[0], mid[1]] as [number, number];
 }
 
-export default function RiverLabels() {
+interface Props {
+  visible: boolean;
+}
+
+export default function RiverLabels({ visible }: Props) {
   const { viewer } = useCesium();
   const entitiesRef = useRef<Entity[]>([]);
   const removeListenerRef = useRef<(() => void) | null>(null);
+  const visibleRef = useRef(visible);
+  visibleRef.current = visible;
 
   useEffect(() => {
     if (!viewer) return;
@@ -76,7 +82,6 @@ export default function RiverLabels() {
               style: LabelStyle.FILL_AND_OUTLINE,
               heightReference: HeightReference.CLAMP_TO_GROUND,
               verticalOrigin: VerticalOrigin.BOTTOM,
-              disableDepthTestDistance: Number.POSITIVE_INFINITY,
               scaleByDistance: new NearFarScalar(1e5, 1.0, 8e6, 0.3),
             },
           });
@@ -88,7 +93,7 @@ export default function RiverLabels() {
         // Altitude-based visibility
         const onCameraChange = () => {
           const height = viewer.camera.positionCartographic.height;
-          const show = height >= RIVER_VISIBILITY_ALTITUDE;
+          const show = visibleRef.current && height >= RIVER_VISIBILITY_ALTITUDE;
           for (const entity of entitiesRef.current) {
             entity.show = show;
           }
@@ -111,6 +116,15 @@ export default function RiverLabels() {
       }
     };
   }, [viewer]);
+
+  useEffect(() => {
+    if (!viewer || viewer.isDestroyed()) return;
+    const height = viewer.camera.positionCartographic.height;
+    const show = visible && height >= RIVER_VISIBILITY_ALTITUDE;
+    for (const entity of entitiesRef.current) {
+      entity.show = show;
+    }
+  }, [visible, viewer]);
 
   return null;
 }

@@ -11,9 +11,13 @@ const RIVER_STYLE = {
 
 import { RIVER_VISIBILITY_ALTITUDE } from "./constants";
 
-export default function Rivers() {
+interface Props {
+  visible: boolean;
+}
+
+export default function Rivers({ visible }: Props) {
   const { viewer } = useCesium();
-  const [visible, setVisible] = useState(true);
+  const [altVisible, setAltVisible] = useState(true);
   const removeListener = useRef<(() => void) | null>(null);
 
   useEffect(() => {
@@ -21,7 +25,7 @@ export default function Rivers() {
 
     const onCameraChange = () => {
       const height = viewer.camera.positionCartographic.height;
-      setVisible(height >= RIVER_VISIBILITY_ALTITUDE);
+      setAltVisible(height >= RIVER_VISIBILITY_ALTITUDE);
     };
 
     removeListener.current = viewer.camera.changed.addEventListener(onCameraChange);
@@ -40,7 +44,7 @@ export default function Rivers() {
       stroke={RIVER_STYLE.stroke}
       strokeWidth={RIVER_STYLE.strokeWidth}
       clampToGround={RIVER_STYLE.clampToGround}
-      show={visible}
+      show={visible && altVisible}
     />
   );
 }

@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/polylabel": "^1.1.3",
     "cesium": "^1.138.0",
+    "polylabel": "^2.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "resium": "^1.19.3"
