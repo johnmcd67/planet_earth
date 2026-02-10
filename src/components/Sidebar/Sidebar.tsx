@@ -1,9 +1,15 @@
 import { useState } from "react";
 import BookmarkList from "./BookmarkList";
 import MeasurementTool from "./MeasurementTool";
+import LayerToggles from "./LayerToggles";
 import "./Sidebar.css";
 
-export default function Sidebar() {
+interface Props {
+  enabledClasses: Record<string, boolean>;
+  onToggle: (cls: string) => void;
+}
+
+export default function Sidebar({ enabledClasses, onToggle }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -16,6 +22,7 @@ export default function Sidebar() {
         {open ? "\u2190" : "\u2630"}
       </button>
       <div className={`sidebar ${open ? "open" : ""}`}>
+        <LayerToggles enabledClasses={enabledClasses} onToggle={onToggle} />
         <BookmarkList />
         <MeasurementTool />
       </div>

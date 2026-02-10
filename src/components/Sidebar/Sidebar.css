@@ -198,6 +198,37 @@
   font-size: 12px;
 }
 
+/* Layer toggles */
+.layer-toggle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.layer-toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  min-height: 32px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.layer-toggle-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.layer-color-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 /* Responsive: narrow screens */
 @media (max-width: 480px) {
   .sidebar {
