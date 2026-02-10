@@ -27,6 +27,7 @@ function getMidpoint(feature: GeoJsonFeature): [number, number] | null {
     coords = coordinates as number[][];
   } else if (type === "MultiLineString") {
     const lines = coordinates as number[][][];
+    if (lines.length === 0) return null;
     coords = lines.reduce((a, b) => (a.length >= b.length ? a : b));
   } else {
     return null;
@@ -46,10 +47,12 @@ export default function RiverLabels() {
   useEffect(() => {
     if (!viewer) return;
 
-    fetch("/data/rivers.geojson")
+    const abortController = new AbortController();
+
+    fetch("/data/rivers.geojson", { signal: abortController.signal })
       .then((res) => res.json())
       .then((geojson) => {
-        if (!viewer || viewer.isDestroyed()) return;
+        if (abortController.signal.aborted || viewer.isDestroyed()) return;
 
         const seen = new Set<string>();
         const entities: Entity[] = [];
@@ -98,6 +101,7 @@ export default function RiverLabels() {
       });
 
     return () => {
+      abortController.abort();
       if (removeListenerRef.current) removeListenerRef.current();
       if (viewer && !viewer.isDestroyed()) {
         for (const entity of entitiesRef.current) {
