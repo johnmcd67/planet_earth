@@ -22,63 +22,66 @@ A web-based 3D globe app using CesiumJS that visualizes Earth as a "human-free" 
 4. **Cesium ion default imagery** to start, NASA Blue Marble as fallback if user dislikes defaults
 5. **localStorage** for bookmark persistence (simple, no backend needed)
 6. **1:50m Natural Earth rivers** to start (~200KB), can upgrade to 1:10m later
-7. **Cesium ion token** via `VITE_CESIUM_ION_TOKEN` env var - user needs to create account at ion.cesium.com
+7. **Cesium ion token** via `VITE_CESIUM_ION_TOKEN` env var
+8. **Children pattern** - Globe component accepts `children` so data sources (Rivers, etc.) are composed declaratively in App.tsx
 
 ## Current Status
 
 ### Phase 0: Project Scaffold - COMPLETE
 
-All files created, `npm install` succeeded (194 packages, 0 vulnerabilities), `npm run dev` serves the app on localhost:5173, `npx vite build` produces a clean production bundle with `cesiumStatic/` directory containing Workers, Assets, ThirdParty, Widgets.
+All files created, `npm install` succeeded, `npm run dev` serves on localhost:5173, `npm run build` produces clean production bundle.
 
-**Files created:**
-- `.gitignore` - standard Node/Vite ignores
-- `package.json` - cesium ^1.138.0, resium ^1.19.3, react ^19, vite ^6.1, etc.
-- `vite.config.ts` - React plugin + Cesium static asset copy + CESIUM_BASE_URL define
-- `tsconfig.json` / `tsconfig.node.json` - strict TypeScript, ES2020, bundler resolution
-- `index.html` - Vite entry with mobile viewport meta tags (viewport-fit=cover, apple-mobile-web-app-capable)
-- `.env.example` - token placeholder with setup instructions
-- `src/vite-env.d.ts` - Vite types + CESIUM_BASE_URL declaration
-- `src/cesium-config.ts` - Ion token init + widget CSS import
-- `src/App.css` - full-screen reset, overflow hidden, position fixed
-- `src/App.tsx` - placeholder with title
-- `src/main.tsx` - init Cesium, render React
-- `src/types/index.ts` - Bookmark, MeasurementPoint, MeasurementResult types
-- `public/favicon.svg` - simple globe SVG icon
-- `Docs/handover.md` - this file
+### Phase 1: Core Globe - COMPLETE
 
-### Next Phase: Phase 1 - Core Globe
+- `src/components/Globe/Globe.tsx` - resium `<Viewer>` with all widgets disabled, world terrain (water mask + vertex normals), 1.5x vertical exaggeration, lighting, fog, atmosphere. Accepts `children` prop.
+- `src/components/Globe/Globe.css` - minimized Cesium credit display
+- Terrain set imperatively via `viewer.scene.setTerrain()` in useEffect (resium doesn't support `terrain` prop directly)
+- Fixed `tsconfig.node.json` - added `composite: true` (was missing from Phase 0)
 
-**What to build:**
-- `src/components/Globe/Globe.tsx` - resium `<Viewer>` component with:
-  - `Terrain.fromWorldTerrain({ requestWaterMask: true, requestVertexNormals: true })`
-  - `scene.verticalExaggeration = 1.5`
-  - Atmosphere, fog, lighting enabled
-  - All Cesium widgets disabled (animation, timeline, geocoder, etc.)
-  - No OSM buildings, labels, or admin boundaries (off by default)
-- `src/components/Globe/Globe.css` - minimize Cesium credit display
-- Update `src/App.tsx` to render `<Globe />`
+### Phase 2: Hydrology Layer - COMPLETE
 
-**Key APIs:** `Terrain.fromWorldTerrain()`, `scene.verticalExaggeration`, resium `<Viewer>`
+- `public/data/rivers.geojson` - Natural Earth 50m rivers (~807KB), downloaded from natural-earth-vector GitHub repo
+- `src/components/Rivers/Rivers.tsx` - `<GeoJsonDataSource>` with steel blue (#4682B4) polylines, 1.5px width, clampToGround
+- `src/App.tsx` - composes `<Globe>` with `<Rivers />` as child
 
-**Prerequisite:** User must create Cesium ion account at https://ion.cesium.com/ and add token to `.env.local`
+### Phase 3: UI Features - COMPLETE
 
-### Phases After That
+- `src/components/Sidebar/Sidebar.tsx` + `Sidebar.css` - Collapsible left sidebar with hamburger toggle, contains BookmarkList and MeasurementTool
+- `src/components/Sidebar/BookmarkList.tsx` - Full CRUD for camera bookmarks in localStorage (`globe_bookmarks` key). Save current view, fly-to on click, inline rename, delete. Uses `useCesium()` for viewer access.
+- `src/components/Sidebar/MeasurementTool.tsx` - Toggle measure mode, click two globe points, computes geodesic distance via `EllipsoidGeodesic`, displays km/mi. Renders yellow point entities on globe. Uses `ScreenSpaceEventHandler`.
+- `src/components/CoordinateDisplay/CoordinateDisplay.tsx` + `CoordinateDisplay.css` - Fixed bottom-right overlay showing lat/lon under cursor. Uses `ScreenSpaceEventHandler` MOUSE_MOVE + `pickEllipsoid`.
+- All UI components placed inside `<Globe>` in App.tsx so they can access resium's `useCesium()` context.
 
-- **Phase 2:** Hydrology layer (Natural Earth 50m rivers GeoJSON, `<GeoJsonDataSource>`, steel blue polylines, clampToGround)
-- **Phase 3:** UI features (collapsible sidebar, bookmarks CRUD with localStorage, geodesic measurement tool using EllipsoidGeodesic, coordinate display)
-- **Phase 4:** Polish & mobile (iOS safe areas, touch targets 44px min, performance tuning, river visibility by altitude)
+### Phase 4: Polish & Mobile - COMPLETE
+
+- `Sidebar.css` - iOS safe areas via `env(safe-area-inset-*)` on sidebar padding and toggle button positioning. All interactive elements (toggle, bookmark add/edit/delete buttons, measure buttons, inputs) enlarged to 44px minimum touch targets. Responsive layout: full-width sidebar on narrow screens (`@media max-width: 480px`), iOS-friendly scroll with `-webkit-overflow-scrolling: touch`.
+- `CoordinateDisplay.css` - Repositioned with `env(safe-area-inset-bottom/right)` to avoid iOS home indicator. Centered horizontally on narrow screens.
+- `Rivers.tsx` - Camera altitude listener hides rivers when zoomed below 50km (`RIVER_VISIBILITY_ALTITUDE = 50_000m`) to reduce GPU load. Uses `viewer.camera.changed` event with 1% threshold.
+
+### Phase 4b: River Labels - COMPLETE
+
+- `src/components/Rivers/RiverLabels.tsx` - Fetches rivers.geojson, extracts named features (deduplicated), computes midpoint of each river's geometry, renders white outlined labels via Cesium `LabelCollection`. Labels scale down at distance via `NearFarScalar`, clamp to ground, and share the same altitude-based visibility as river lines (hidden below 50km).
+- `src/components/Rivers/constants.ts` - Shared `RIVER_VISIBILITY_ALTITUDE` constant used by both Rivers.tsx and RiverLabels.tsx.
+- Rivers.tsx updated to import from shared constants.
+
+### Next Phase: Phase 5 - TBD
 
 ## Key File Paths
 
-- Plan: `C:\Users\johnm\.claude\plans\curried-snuggling-creek.md`
 - Project root: `c:\Users\johnm\OneDrive\Desktop\DesktopFiles\Projects\Cursor\planet_earth`
-- Vite config (critical): `vite.config.ts`
+- Vite config: `vite.config.ts`
 - Cesium init: `src/cesium-config.ts`
 - Types: `src/types/index.ts`
+- Globe component: `src/components/Globe/Globe.tsx`
+- Rivers component: `src/components/Rivers/Rivers.tsx`
+- Sidebar: `src/components/Sidebar/Sidebar.tsx`
+- Bookmarks: `src/components/Sidebar/BookmarkList.tsx`
+- Measurement: `src/components/Sidebar/MeasurementTool.tsx`
+- Coordinate display: `src/components/CoordinateDisplay/CoordinateDisplay.tsx`
+- App composition: `src/App.tsx`
 
 ## Issues / Notes
 
-- User has NOT yet created a Cesium ion account (needed for Phase 1+)
 - The `.test` file in the repo root can be deleted (artifact from initial git setup)
-- Resium may not support the `terrain` prop directly - if so, set imperatively via `viewer.scene.setTerrain()` in useEffect
-- `clampToGround` on GeoJSON polylines may conflict with styling - fall back to constant altitude if needed
+- `clampToGround` on river polylines is working - no fallback needed
+- CesiumJS bundle is ~4.5MB (expected, could code-split later if needed)

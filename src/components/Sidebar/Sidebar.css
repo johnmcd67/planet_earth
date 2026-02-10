@@ -1,0 +1,211 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 280px;
+  background: rgba(15, 15, 20, 0.85);
+  color: #e0e0e0;
+  z-index: 20;
+  transform: translateX(-280px);
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 16px;
+  padding-top: calc(12px + env(safe-area-inset-top));
+  padding-left: calc(16px + env(safe-area-inset-left));
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-toggle {
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top));
+  left: calc(10px + env(safe-area-inset-left));
+  z-index: 25;
+  width: 44px;
+  height: 44px;
+  background: rgba(15, 15, 20, 0.85);
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: left 0.25s ease;
+}
+
+.sidebar-toggle.shifted {
+  left: 290px;
+}
+
+/* Sections */
+.sidebar-section {
+  margin-bottom: 20px;
+}
+
+.sidebar-section h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #999;
+}
+
+.sidebar-hint {
+  color: #777;
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+/* Bookmark add */
+.bookmark-add {
+  display: flex;
+  gap: 6px;
+}
+
+.bookmark-add input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #e0e0e0;
+  padding: 4px 8px;
+  font-size: 13px;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.bookmark-add button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #e0e0e0;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Bookmark list */
+.bookmark-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+}
+
+.bookmark-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  min-height: 44px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.bookmark-name {
+  cursor: pointer;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.bookmark-name:hover {
+  color: #90caf9;
+}
+
+.bookmark-actions button {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 10px 12px;
+  font-size: 14px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.bookmark-actions button:hover {
+  color: #e0e0e0;
+}
+
+.rename-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+  color: #e0e0e0;
+  padding: 2px 6px;
+  font-size: 13px;
+  flex: 1;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+/* Measure */
+.measure-toggle {
+  width: 100%;
+  padding: 6px 12px;
+  min-height: 44px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #e0e0e0;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.measure-toggle.active {
+  background: rgba(100, 180, 255, 0.2);
+  border-color: rgba(100, 180, 255, 0.4);
+}
+
+.measure-result {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.measure-result p {
+  margin: 2px 0;
+  font-family: monospace;
+}
+
+.measure-result button {
+  margin-top: 6px;
+  padding: 4px 10px;
+  min-height: 44px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #e0e0e0;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* Responsive: narrow screens */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100vw;
+    transform: translateX(-100vw);
+  }
+
+  .sidebar-toggle.shifted {
+    left: calc(100vw - 54px);
+  }
+}

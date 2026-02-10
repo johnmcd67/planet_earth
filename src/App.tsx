@@ -1,8 +1,17 @@
+import Globe from "./components/Globe/Globe";
+import Rivers from "./components/Rivers/Rivers";
+import RiverLabels from "./components/Rivers/RiverLabels";
+import Sidebar from "./components/Sidebar/Sidebar";
+import CoordinateDisplay from "./components/CoordinateDisplay/CoordinateDisplay";
+
 function App() {
   return (
-    <div style={{ width: "100%", height: "100%", background: "#000", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <h1>The Natural History Globe</h1>
-    </div>
+    <Globe>
+      <Rivers />
+      <RiverLabels />
+      <CoordinateDisplay />
+      <Sidebar />
+    </Globe>
   );
 }
 

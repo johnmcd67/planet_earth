@@ -1,0 +1,10 @@
+.cesium-credit-logoContainer {
+  opacity: 0.3;
+  transform: scale(0.7);
+  transform-origin: bottom right;
+}
+
+.cesium-credit-textContainer {
+  font-size: 10px;
+  opacity: 0.4;
+}
