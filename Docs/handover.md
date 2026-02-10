@@ -64,7 +64,24 @@ All files created, `npm install` succeeded, `npm run dev` serves on localhost:51
 - `src/components/Rivers/constants.ts` - Shared `RIVER_VISIBILITY_ALTITUDE` constant used by both Rivers.tsx and RiverLabels.tsx.
 - Rivers.tsx updated to import from shared constants.
 
-### Next Phase: Phase 5 - TBD
+### Phase 5: Geography Regions - COMPLETE
+
+- `public/data/geography_regions.geojson` - Natural Earth geographic regions (deserts, mountains, plains, basins, etc.)
+- `src/components/GeographyRegions/constants.ts` - `FEATURE_CLASSES` config (22 feature types with labels and colors), `TOGGLE_CLASSES`, `normalizeFeatureClass()`
+- `src/components/GeographyRegions/utils.ts` - `getCentroid()` using polylabel for optimal label placement, `splitByFeatureClass()` for grouping features
+- `src/components/GeographyRegions/GeographyRegions.tsx` - Renders colored polygon overlays per feature class using `<GeoJsonDataSource>`
+- `src/components/GeographyRegions/GeographyRegionLabels.tsx` - White text labels (matching river style) with black outline, altitude-gated visibility, grouped by feature class for toggle control
+
+### Phase 5b: UI Enhancements - COMPLETE
+
+- **Label font color:** All geographic feature labels changed to white (`Color.WHITE.withAlpha(0.9)`) to match river labels for readability. Sidebar color swatches and region overlays retain per-feature-class colors.
+- **Globe occlusion fix:** Removed `disableDepthTestDistance: Number.POSITIVE_INFINITY` from both `GeographyRegionLabels.tsx` and `RiverLabels.tsx` so labels on the far side of the globe are properly hidden by depth testing.
+- **Default layer state:** Rivers and all geographic features default to OFF on load (`App.tsx` - `useState(false)` for both `showRivers` and `enabledClasses`).
+- **Select All fix:** Fixed `LayerToggles.tsx` toggle logic from `noneOn ? true : false` to `!allOn` so partial selections correctly select all.
+- **Search feature:** `src/components/Sidebar/Search.tsx` - Local data search across geography regions and rivers. Fetches both GeoJSON files on mount, builds searchable index with centroids. Debounced substring matching, shows up to 10 results with feature type. Clicking a result flies the camera to the location at 500km altitude.
+- **Settings cleanup:** Removed unnecessary `WebFetch(domain:github.com)` permission from `.claude/settings.local.json`.
+
+### Next Phase: Phase 6 - TBD
 
 ## Key File Paths
 
@@ -74,14 +91,29 @@ All files created, `npm install` succeeded, `npm run dev` serves on localhost:51
 - Types: `src/types/index.ts`
 - Globe component: `src/components/Globe/Globe.tsx`
 - Rivers component: `src/components/Rivers/Rivers.tsx`
+- River labels: `src/components/Rivers/RiverLabels.tsx`
+- Geography regions: `src/components/GeographyRegions/GeographyRegions.tsx`
+- Geography labels: `src/components/GeographyRegions/GeographyRegionLabels.tsx`
+- Geography constants: `src/components/GeographyRegions/constants.ts`
+- Geography utils: `src/components/GeographyRegions/utils.ts`
 - Sidebar: `src/components/Sidebar/Sidebar.tsx`
+- Search: `src/components/Sidebar/Search.tsx`
+- Layer toggles: `src/components/Sidebar/LayerToggles.tsx`
 - Bookmarks: `src/components/Sidebar/BookmarkList.tsx`
 - Measurement: `src/components/Sidebar/MeasurementTool.tsx`
 - Coordinate display: `src/components/CoordinateDisplay/CoordinateDisplay.tsx`
 - App composition: `src/App.tsx`
+
+## Workflow Notes
+
+# Add line 110 to the CLAUDE.md file user has asked you to create
+- A Cursor agent automatically reviews each commit for bugs. Its findings will be shared during sessions for verification — some may be false positives due to lacking conversation context.
+- User prefers to commit changes themselves
+- Plan mode is used for non-trivial features
 
 ## Issues / Notes
 
 - The `.test` file in the repo root can be deleted (artifact from initial git setup)
 - `clampToGround` on river polylines is working - no fallback needed
 - CesiumJS bundle is ~4.5MB (expected, could code-split later if needed)
+- The `labelColor` variable in `GeographyRegionLabels.tsx` is computed but intentionally unused for label fill — kept in case region-specific label coloring is wanted later. The white fill was a deliberate design choice for readability.

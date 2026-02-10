@@ -49,7 +49,7 @@ export default function LayerToggles({ enabledClasses, onToggle, onToggleAll, sh
             ref={selectAllRef}
             type="checkbox"
             checked={allOn}
-            onChange={() => onToggleAll(noneOn ? true : false)}
+            onChange={() => onToggleAll(!allOn)}
           />
           <em>Select All</em>
         </label>
