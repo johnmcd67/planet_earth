@@ -7,7 +7,6 @@ import GeographyRegionLabels from "./components/GeographyRegions/GeographyRegion
 import Sidebar from "./components/Sidebar/Sidebar";
 import CoordinateDisplay from "./components/CoordinateDisplay/CoordinateDisplay";
 import ZoomControls from "./components/ZoomControls/ZoomControls";
-import Compass from "./components/ZoomControls/Compass";
 import { TOGGLE_CLASSES } from "./components/GeographyRegions/constants";
 
 function App() {
@@ -32,7 +31,6 @@ function App() {
       <GeographyRegionLabels enabledClasses={enabledClasses} />
       <CoordinateDisplay />
       <ZoomControls />
-      <Compass />
       <Sidebar enabledClasses={enabledClasses} onToggle={handleToggle} onToggleAll={handleToggleAll} showRivers={showRivers} onToggleRivers={handleToggleRivers} />
     </Globe>
   );
