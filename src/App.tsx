@@ -6,6 +6,7 @@ import GeographyRegions from "./components/GeographyRegions/GeographyRegions";
 import GeographyRegionLabels from "./components/GeographyRegions/GeographyRegionLabels";
 import Sidebar from "./components/Sidebar/Sidebar";
 import CoordinateDisplay from "./components/CoordinateDisplay/CoordinateDisplay";
+import ZoomControls from "./components/ZoomControls/ZoomControls";
 import { TOGGLE_CLASSES } from "./components/GeographyRegions/constants";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
       <GeographyRegions enabledClasses={enabledClasses} />
       <GeographyRegionLabels enabledClasses={enabledClasses} />
       <CoordinateDisplay />
+      <ZoomControls />
       <Sidebar enabledClasses={enabledClasses} onToggle={handleToggle} onToggleAll={handleToggleAll} showRivers={showRivers} onToggleRivers={handleToggleRivers} />
     </Globe>
   );
