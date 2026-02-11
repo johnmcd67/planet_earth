@@ -7,9 +7,13 @@ interface Props {
   onToggleAll: (on: boolean) => void;
   showRivers: boolean;
   onToggleRivers: () => void;
+  showOceanSeas: boolean;
+  onToggleOceanSeas: () => void;
+  showMountainPeaks: boolean;
+  onToggleMountainPeaks: () => void;
 }
 
-export default function LayerToggles({ enabledClasses, onToggle, onToggleAll, showRivers, onToggleRivers }: Props) {
+export default function LayerToggles({ enabledClasses, onToggle, onToggleAll, showRivers, onToggleRivers, showOceanSeas, onToggleOceanSeas, showMountainPeaks, onToggleMountainPeaks }: Props) {
   const selectAllRef = useRef<HTMLInputElement>(null);
 
   const enabledCount = TOGGLE_CLASSES.filter((cls) => enabledClasses[cls]).length;
@@ -38,6 +42,30 @@ export default function LayerToggles({ enabledClasses, onToggle, onToggleAll, sh
             style={{ backgroundColor: "#4682B4" }}
           />
           Rivers
+        </label>
+        <label className="layer-toggle-item">
+          <input
+            type="checkbox"
+            checked={showOceanSeas}
+            onChange={onToggleOceanSeas}
+          />
+          <span
+            className="layer-color-swatch"
+            style={{ backgroundColor: "#1E90FF" }}
+          />
+          Oceans & Seas
+        </label>
+        <label className="layer-toggle-item">
+          <input
+            type="checkbox"
+            checked={showMountainPeaks}
+            onChange={onToggleMountainPeaks}
+          />
+          <span
+            className="layer-color-swatch"
+            style={{ backgroundColor: "#8B7355" }}
+          />
+          Mountain Peaks
         </label>
       </div>
     </div>

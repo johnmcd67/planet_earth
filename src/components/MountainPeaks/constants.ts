@@ -1,0 +1,1 @@
+export const PEAK_VISIBILITY_ALTITUDE = 80_000;

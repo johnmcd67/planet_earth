@@ -7,7 +7,7 @@ export interface FeatureClassConfig {
 
 export const FEATURE_CLASSES: Record<string, FeatureClassConfig> = {
   "Desert":       { label: "Deserts",        color: "#EDC9AF" },
-  "Range/mtn":    { label: "Mountains",      color: "#8B7355" },
+  "Range/mtn":    { label: "Mountain Ranges", color: "#8B7355" },
   "Plateau":      { label: "Plateaus",       color: "#A0522D" },
   "Plain":        { label: "Plains",         color: "#90EE90" },
   "Basin":        { label: "Basins",         color: "#6B8E23" },

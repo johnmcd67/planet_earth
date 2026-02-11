@@ -8,7 +8,10 @@
       "Bash(curl:*)",
       "Bash(powershell -Command:*)",
       "Bash(node -e:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(ls -la \"c:\\\\Users\\\\johnm\\\\OneDrive\\\\Desktop\\\\DesktopFiles\\\\Projects\\\\Cursor\\\\planet_earth\\\\public\\\\data\"\" 2>/dev/null || echo \"Directory check \")",
+      "WebFetch(domain:github.com)",
+      "Bash(python:*)"
     ]
   }
 }

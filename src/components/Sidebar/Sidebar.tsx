@@ -11,9 +11,13 @@ interface Props {
   onToggleAll: (on: boolean) => void;
   showRivers: boolean;
   onToggleRivers: () => void;
+  showOceanSeas: boolean;
+  onToggleOceanSeas: () => void;
+  showMountainPeaks: boolean;
+  onToggleMountainPeaks: () => void;
 }
 
-export default function Sidebar({ enabledClasses, onToggle, onToggleAll, showRivers, onToggleRivers }: Props) {
+export default function Sidebar({ enabledClasses, onToggle, onToggleAll, showRivers, onToggleRivers, showOceanSeas, onToggleOceanSeas, showMountainPeaks, onToggleMountainPeaks }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -27,7 +31,7 @@ export default function Sidebar({ enabledClasses, onToggle, onToggleAll, showRiv
       </button>
       <div className={`sidebar ${open ? "open" : ""}`}>
         <Search />
-        <LayerToggles enabledClasses={enabledClasses} onToggle={onToggle} onToggleAll={onToggleAll} showRivers={showRivers} onToggleRivers={onToggleRivers} />
+        <LayerToggles enabledClasses={enabledClasses} onToggle={onToggle} onToggleAll={onToggleAll} showRivers={showRivers} onToggleRivers={onToggleRivers} showOceanSeas={showOceanSeas} onToggleOceanSeas={onToggleOceanSeas} showMountainPeaks={showMountainPeaks} onToggleMountainPeaks={onToggleMountainPeaks} />
         <BookmarkList />
         <MeasurementTool />
       </div>

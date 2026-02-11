@@ -6,7 +6,7 @@ import { FEATURE_CLASSES, normalizeFeatureClass } from "../GeographyRegions/cons
 
 interface SearchEntry {
   name: string;
-  type: "river" | "geography";
+  type: "river" | "geography" | "ocean" | "peak";
   featureClass: string;
   lon: number;
   lat: number;
@@ -37,7 +37,9 @@ export default function Search() {
     Promise.all([
       fetch(`${import.meta.env.BASE_URL}data/geography_regions.geojson`, { signal: abort.signal }).then((r) => r.json()),
       fetch(`${import.meta.env.BASE_URL}data/rivers.geojson`, { signal: abort.signal }).then((r) => r.json()),
-    ]).then(([geo, rivers]) => {
+      fetch(`${import.meta.env.BASE_URL}data/ocean_seas.geojson`, { signal: abort.signal }).then((r) => r.json()),
+      fetch(`${import.meta.env.BASE_URL}data/mountain_peaks.geojson`, { signal: abort.signal }).then((r) => r.json()),
+    ]).then(([geo, rivers, oceans, peaks]) => {
       const entries: SearchEntry[] = [];
       const seen = new Set<string>();
 
@@ -79,6 +81,42 @@ export default function Search() {
         });
       }
 
+      for (const f of oceans.features) {
+        const name = f.properties?.name;
+        if (!name || seen.has(`ocean-${name}`)) continue;
+        seen.add(`ocean-${name}`);
+
+        const centroid = getCentroid(f);
+        if (!centroid) continue;
+
+        const cls = f.properties?.featurecla ?? "ocean";
+        entries.push({
+          name,
+          type: "ocean",
+          featureClass: cls === "sea" ? "Sea" : "Ocean",
+          lon: centroid[0],
+          lat: centroid[1],
+        });
+      }
+
+      for (const f of peaks.features) {
+        const name = f.properties?.name;
+        if (!name || seen.has(`peak-${name}`)) continue;
+        seen.add(`peak-${name}`);
+
+        const coords = f.geometry?.coordinates;
+        if (!coords || coords[0] == null || coords[1] == null) continue;
+
+        const elevation = f.properties?.elevation ?? 0;
+        entries.push({
+          name: `${name} (${elevation.toLocaleString()}m)`,
+          type: "peak",
+          featureClass: "Mountain Peak",
+          lon: coords[0],
+          lat: coords[1],
+        });
+      }
+
       indexRef.current = entries;
     }).catch(() => {});
 
@@ -106,8 +144,9 @@ export default function Search() {
   function handleSelect(entry: SearchEntry) {
     if (!viewer || viewer.isDestroyed()) return;
 
+    const altitude = entry.type === "ocean" ? 2_000_000 : entry.type === "peak" ? 100_000 : 500_000;
     viewer.camera.flyTo({
-      destination: Cartesian3.fromDegrees(entry.lon, entry.lat, 500_000),
+      destination: Cartesian3.fromDegrees(entry.lon, entry.lat, altitude),
       orientation: {
         heading: 0,
         pitch: -CesiumMath.PI_OVER_TWO,
@@ -125,7 +164,7 @@ export default function Search() {
       <input
         className="search-input"
         type="text"
-        placeholder="Search features & rivers..."
+        placeholder="Search features, rivers, oceans & peaks..."
         value={query}
         onChange={(e) => handleInput(e.target.value)}
       />
