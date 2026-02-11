@@ -40,7 +40,7 @@ export default function Rivers({ visible }: Props) {
 
   return (
     <GeoJsonDataSource
-      data="/data/rivers.geojson"
+      data={`${import.meta.env.BASE_URL}data/rivers.geojson`}
       stroke={RIVER_STYLE.stroke}
       strokeWidth={RIVER_STYLE.strokeWidth}
       clampToGround={RIVER_STYLE.clampToGround}
