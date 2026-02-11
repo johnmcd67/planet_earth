@@ -20,6 +20,7 @@ export default function Globe({ children }: { children?: ReactNode }) {
     viewer.scene.verticalExaggeration = 1.5;
     viewer.scene.globe.enableLighting = true;
     viewer.scene.fog.enabled = true;
+    viewer.scene.globe.depthTestAgainstTerrain = true;
   }, []);
 
   return (
