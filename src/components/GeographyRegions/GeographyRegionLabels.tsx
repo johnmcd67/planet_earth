@@ -41,7 +41,7 @@ export default function GeographyRegionLabels({ enabledClasses }: Props) {
 
     const abortController = new AbortController();
 
-    fetch("/data/geography_regions.geojson", {
+    fetch(`${import.meta.env.BASE_URL}data/geography_regions.geojson`, {
       signal: abortController.signal,
     })
       .then((res) => res.json())
@@ -65,7 +65,8 @@ export default function GeographyRegionLabels({ enabledClasses }: Props) {
           const config = FEATURE_CLASSES[cls];
           if (!config) continue;
 
-          const labelColor = Color.fromCssColorString(config.color);
+          // Kept for potential future per-region coloring
+          void Color.fromCssColorString(config.color);
 
           const entity = viewer.entities.add({
             position: Cartesian3.fromDegrees(centroid[0], centroid[1]),

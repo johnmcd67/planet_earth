@@ -13,14 +13,15 @@ interface SearchEntry {
 }
 
 function getRiverMidpoint(coords: number[][][]): [number, number] | null {
-  // Pick the longest line string
-  let longest = coords[0];
+  if (coords.length === 0) return null;
+  let longest = coords[0]!;
   for (const line of coords) {
     if (line.length > longest.length) longest = line;
   }
-  if (!longest || longest.length === 0) return null;
+  if (longest.length === 0) return null;
   const mid = longest[Math.floor(longest.length / 2)];
-  return mid ? [mid[0], mid[1]] : null;
+  if (!mid || mid.length < 2) return null;
+  return [mid[0]!, mid[1]!];
 }
 
 export default function Search() {
@@ -28,14 +29,14 @@ export default function Search() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchEntry[]>([]);
   const indexRef = useRef<SearchEntry[]>([]);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     const abort = new AbortController();
 
     Promise.all([
-      fetch("/data/geography_regions.geojson", { signal: abort.signal }).then((r) => r.json()),
-      fetch("/data/rivers.geojson", { signal: abort.signal }).then((r) => r.json()),
+      fetch(`${import.meta.env.BASE_URL}data/geography_regions.geojson`, { signal: abort.signal }).then((r) => r.json()),
+      fetch(`${import.meta.env.BASE_URL}data/rivers.geojson`, { signal: abort.signal }).then((r) => r.json()),
     ]).then(([geo, rivers]) => {
       const entries: SearchEntry[] = [];
       const seen = new Set<string>();

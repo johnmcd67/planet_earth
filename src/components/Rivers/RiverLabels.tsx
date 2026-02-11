@@ -55,7 +55,7 @@ export default function RiverLabels({ visible }: Props) {
 
     const abortController = new AbortController();
 
-    fetch("/data/rivers.geojson", { signal: abortController.signal })
+    fetch(`${import.meta.env.BASE_URL}data/rivers.geojson`, { signal: abortController.signal })
       .then((res) => res.json())
       .then((geojson) => {
         if (abortController.signal.aborted || viewer.isDestroyed()) return;

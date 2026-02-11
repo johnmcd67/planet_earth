@@ -18,7 +18,7 @@ export default function GeographyRegions({ enabledClasses }: Props) {
   useEffect(() => {
     const abortController = new AbortController();
 
-    fetch("/data/geography_regions.geojson", {
+    fetch(`${import.meta.env.BASE_URL}data/geography_regions.geojson`, {
       signal: abortController.signal,
     })
       .then((res) => res.json())
